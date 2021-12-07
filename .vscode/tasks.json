@@ -1,0 +1,56 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "pickTarget",
+            "type": "pickString",
+            "description": "Choose the target to build:",
+            "options": [
+                "all"
+            ]
+        }
+    ],
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "time cmake --build build/debug --target ${input:pickTarget} -- -j4",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "ClangConfigure",
+            "type": "shell",
+            "command": [
+                "export CC=/usr/bin/clang &&",
+                "export CXX=/usr/bin/clang++ &&",
+                "mkdir -p build/clangd &&",
+                "rm -rf build/clangd/CMakeFiles &&",
+                "rm -rf build/clangd/CMakeCache\\* &&",
+                "cd build/clangd &&",
+                "cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCONANBUILDINFO_PATH=${workspaceFolder}/conan/clang -DCMAKE_CXX_FLAGS=-fmax-errors=5 -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../install -DBUILD_SRC=ON -DBUILD_TESTS=ON ../.. &&",
+                "ln -s -f ${workspaceFolder}/build/clangd/compile_commands.json ${workspaceFolder}/compile_commands.json"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "DebugConfigure",
+            "type": "shell",
+            "command": [
+                "mkdir -p build/debug &&",
+                "rm -rf build/debug/CMakeFiles &&",
+                "rm -rf build/debug/CMakeCache\\* &&",
+                "cd build/debug &&",
+                "cmake -DCONANBUILDINFO_PATH=${workspaceFolder}/conan/gcc -DCMAKE_CXX_FLAGS=-fmax-errors=5 -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../install -DBUILD_SRC=ON -DBUILD_TESTS=ON ../..",
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

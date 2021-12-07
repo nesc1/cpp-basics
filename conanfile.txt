@@ -1,0 +1,13 @@
+[requires]
+spdlog/1.9.2
+gtest/1.11.0
+
+[generators]
+cmake
+
+[options]
+
+
+[imports]
+bin, *.dll -> ../build/bin # Copies all dll files
+lib, *.so* -> ../build/lib # Copies all lib files

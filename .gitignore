@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# directories & files
+.clangd
+.cache
+install
+conan
+conan-gcc
+conan-clang
+compile_commands.json
